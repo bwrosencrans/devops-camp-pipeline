@@ -3,6 +3,13 @@ pipeline {
         label 'jenkins-agent'
     }
     //TODO("Lab 4 - Artifact Management"): add environment variables
+    environment {
+        PIPELINE_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        HARBOR_REGISTRY = 'harbor.dev.afsmtddso.com'
+        HARBOR_PROJECT = 'brosencrans-harbor-project'
+        APP_IMAGE_NAME = 'app'
+        DB_IMAGE_NAME = 'db'
+    }
     stages {
         stage('Application repository') {
             steps {
@@ -78,10 +85,4 @@ pipeline {
             sh 'rm -rf .git ./*'
         }
     }
-}environment {
-        PIPELINE_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        HARBOR_REGISTRY = 'harbor.dev.afsmtddso.com'
-        HARBOR_PROJECT = 'brosencrans-harbor-project'
-        APP_IMAGE_NAME = 'app'
-        DB_IMAGE_NAME = 'db'
     }
