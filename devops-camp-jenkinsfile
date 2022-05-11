@@ -80,6 +80,10 @@ pipeline {
             }
             }
             //TODO("Lab 4 - Artifact Management"): clean local docker db image
+            stage('Test'){
+                steps {
+                echo "Testing stage"
+                }
         }
         //TODO("Lab 7 - Automated Security Scans"): add a stage
         stage('Deploy') {
