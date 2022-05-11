@@ -29,7 +29,7 @@ pipeline {
                 withCredentials([usernameColonPassword(credentialsId: 'brosencrans-harbor-auth', variable: 'HARBOR-AUTH')]) {
                     script {
                         sh 'docker build -t $DB_IMAGE_NAME-$COMMIT_HASH -f ./db/Dockerfile ./afs-labs-student'
-                        docker.withRegistry('https://$HARBOR_REGISTRY', 'brosencrans-harbor-project') {
+                        docker.withRegistry('https://$HARBOR_REGISTRY', 'brosencrans-harbor-auth') {
                             sh 'docker tag $DB_IMAGE_NAME-$COMMIT_HASH $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                             sh 'docker push $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                         }
