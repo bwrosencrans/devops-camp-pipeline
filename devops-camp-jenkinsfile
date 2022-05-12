@@ -33,14 +33,7 @@ pipeline {
                             sh 'docker tag $APP_IMAGE_NAME-$COMMIT_HASH $HARBOR_REGISTRY/$HARBOR_PROJECT/$APP_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                             sh 'docker push $HARBOR_REGISTRY/$HARBOR_PROJECT/$APP_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                         }
-                        stage('Security scanning') {
-                  steps {
-                       withCredentials([usernamePassword(credentialsId: 'brosencrans-harbor-auth', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                            echo "Scanning $APP_IMAGE_NAME image"
-                            sh 'python harbor_scanner.py -i $APP_IMAGE_NAME -r $HARBOR_REGISTRY -p $HARBOR_PROJECT -c ${USERNAME}:${PASSWORD}'
-                       }
-                  }
-              }
+   
                     }
                 }
             }
@@ -59,6 +52,7 @@ pipeline {
                 }
             }
         }
+
         stage('Database docker build') {
             steps {
                 echo "Building database image"
@@ -92,6 +86,14 @@ pipeline {
                 steps {
                 echo "Testing stage"
                 }
+        }
+        stage('Security scanning') {
+                  steps {
+                       withCredentials([usernamePassword(credentialsId: 'brosencrans-harbor-auth', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                            echo "Scanning $APP_IMAGE_NAME image"
+                            sh 'python harbor_scanner.py -i $APP_IMAGE_NAME -r $HARBOR_REGISTRY -p $HARBOR_PROJECT -c ${USERNAME}:${PASSWORD}'
+                       }
+                  }
         }
         //TODO("Lab 7 - Automated Security Scans"): add a stage
         stage('Deploy') {
